@@ -1,8 +1,8 @@
-﻿using Cangjie.Core.Extensions;
-using System.Collections;
+﻿using System.Collections;
+using TidyHPC.Extensions;
 
-namespace Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
-public class Fields : IEnumerable<Field>
+namespace  Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
+public class Fields:IEnumerable<Field>
 {
     private List<Field> Data { get; set; } = new();
 
@@ -14,7 +14,7 @@ public class Fields : IEnumerable<Field>
 
     public IEnumerator<Field> GetEnumerator()
     {
-        foreach (var i in Data)
+        foreach(var i in Data)
         {
             yield return i;
         }

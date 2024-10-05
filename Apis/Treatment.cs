@@ -1,5 +1,6 @@
 ﻿using TidyHPC.Extensions;
 using TidyHPC.LiteJson;
+using Cangjie.TypeSharp;
 
 namespace Cangjie.TypeSharp.Cli.Apis;
 public class Treatment

@@ -1,4 +1,4 @@
-﻿namespace Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
+﻿namespace  Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
 public struct Key
 {
     public string Name { get; set; }

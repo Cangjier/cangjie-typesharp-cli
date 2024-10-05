@@ -1,15 +1,17 @@
-﻿using Cangjie.Core.Steper;
-using Cangjie.Core.Syntax;
-using Cangjie.Core.Syntax.Templates;
-using Cangjie.Imp.Text;
-using Cangjie.Imp.Text.Units;
-using Cangjie.TypeSharp.Cli.HeaderScript.Steper;
+﻿using  Cangjie.TypeSharp.Cli.HeaderScript.Steper;
+using  Cangjie.Core.Syntax;
 using System.Collections;
+using  Cangjie.Dawn.Text;
+using  Cangjie.Core.Syntax.Templates;
+using Cangjie.Owners;
+using Cangjie.Dawn.Text.Units;
+using Cangjie.Core.Steper;
+using Cangjie.Core.Runtime;
 using TidyHPC.Extensions;
 
 
-namespace Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
-public class MimeTypes : IEnumerable<MimeType>, IReleasable
+namespace  Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
+public class MimeTypes:IEnumerable<MimeType>,IReleasable
 {
     public static Template<char> MimeTypeTemplate { get; } = new Func<Template<char>>(() =>
     {
@@ -24,8 +26,8 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
     public static MimeTypes? Parse(string Content)
     {
         Owner owner = new();
-        Document<char> document = new(owner, (Path) => Content[Path], () => Content.Length);
-        TextContext textContext = new(owner, MimeTypeTemplate);
+        Document<char> document = new(owner,(Path) => Content[Path], () => Content.Length);
+        TextContext textContext = new (owner,MimeTypeTemplate);
         textContext.Process(document);
 
         StepContext<char> stepContext = new(owner);
@@ -39,7 +41,7 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
         owner.Release();
 
         if (lastValue is MimeTypes mimeTypes) return mimeTypes;
-        if (lastValue is MimeType mimeType)
+        if(lastValue is MimeType mimeType)
         {
             var result = new MimeTypes
             {
@@ -47,7 +49,7 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
             };
             return result;
         }
-        else if (lastValue is Field field)
+        else if(lastValue is Field field)
         {
             var result = new MimeTypes
             {
@@ -58,7 +60,7 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
             };
             return result;
         }
-        else if (lastValue is null)
+        else if(lastValue is null)
         {
             return new();
         }
@@ -80,9 +82,9 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
 
     public IEnumerator<MimeType> GetEnumerator()
     {
-        foreach (var i in Data)
+        foreach(var i in Data)
         {
-            yield return i;
+            yield return i; 
         }
     }
 
@@ -102,9 +104,9 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
 
     public MimeType? Get(string master)
     {
-        foreach (var i in Data)
+        foreach(var i in Data)
         {
-            if (i.Master == master) return i;
+            if(i.Master==master)return i;
         }
         return null;
     }
@@ -124,9 +126,9 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
         {
             if (i.Master == master) return i;
         }
-        var result = new MimeType()
+        var result = new MimeType() 
         {
-            Master = master
+            Master=master
         };
         Data.Add(result);
         return result;
@@ -140,7 +142,7 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
 
     public void Release()
     {
-        foreach (var i in Data)
+        foreach(var i in Data)
         {
             i.Release();
         }
@@ -151,7 +153,7 @@ public class MimeTypes : IEnumerable<MimeType>, IReleasable
     public MimeTypes Copy()
     {
         var result = new MimeTypes();
-        foreach (var i in Data)
+        foreach(var i in Data)
         {
             result.Data.Add(i.Copy());
         }

@@ -1,7 +1,7 @@
-﻿using Cangjie.TypeSharp;
-using Cangjie.TypeSharp.Cli;
+﻿using TidyHPC.Routers.Args;
+using Cangjie.TypeSharp;
 using Cangjie.TypeSharp.System;
-using TidyHPC.Routers.Args;
+using Cangjie.TypeSharp.Cli;
 using CLIUtil = Cangjie.TypeSharp.Cli.Util;
 
 ArgsRouter argsRouter = new();

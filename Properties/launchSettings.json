@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Cangjie.TypeSharp.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "run cs2ts"
+    }
+  }
+}

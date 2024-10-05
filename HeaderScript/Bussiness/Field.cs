@@ -1,4 +1,4 @@
-﻿namespace Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
+﻿namespace  Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
 public struct Field
 {
     public string Value { get; set; }
@@ -13,7 +13,7 @@ public struct Field
         return left.Add(right);
     }
 
-    public static Field operator -(Field left, Field right)
+    public static Field operator - (Field left, Field right)
     {
         return new() { Value = left.Value + "-" + right.Value };
     }
@@ -30,7 +30,7 @@ public struct Field
     {
         var result = new MimeType();
         result.Master = left.Value;
-        foreach (var item in right)
+        foreach(var item in right)
         {
             result.Types.Add(item.Value);
         }

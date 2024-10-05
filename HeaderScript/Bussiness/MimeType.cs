@@ -1,9 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Cangjie.Owners;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using TidyHPC.Extensions;
 
-namespace Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
-public class MimeType : IReleasable
+namespace  Cangjie.TypeSharp.Cli.HeaderScript.Bussiness;
+public class MimeType:IReleasable
 {
     public string Master { get; set; } = string.Empty;
 
@@ -21,7 +22,7 @@ public class MimeType : IReleasable
         return this;
     }
 
-    public MimeType Set(string keyName, object value)
+    public MimeType Set(string keyName,object value)
     {
         Map[keyName] = value;
         return this;
@@ -58,7 +59,7 @@ public class MimeType : IReleasable
         }
     }
 
-    public object GetOrCreate(string keyName, object defaultValue)
+    public object GetOrCreate(string keyName,object defaultValue)
     {
         if (!Map.ContainsKey(keyName))
         {
@@ -98,7 +99,7 @@ public class MimeType : IReleasable
         };
         return result;
     }
-
+    
     /// <summary>
     /// 逗号运算符
     /// </summary>
@@ -122,9 +123,9 @@ public class MimeType : IReleasable
         {
             result.Append($"{Master}/{Types.Join("+")}");
         }
-        foreach (var i in Map)
+        foreach(var i in Map)
         {
-            if (i.Value is string)
+            if(i.Value is string)
             {
                 result.Append($"; {i.Key}=\"{i.Value}\"");
             }
@@ -154,7 +155,7 @@ public class MimeType : IReleasable
             Master = Master
         };
         result.Types.AddRange(Types);
-        foreach (var i in Map)
+        foreach(var i in Map)
         {
             result.Map.Add(i.Key, i.Value);
         }

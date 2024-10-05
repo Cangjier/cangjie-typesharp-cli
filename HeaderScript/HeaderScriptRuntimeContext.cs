@@ -1,4 +1,6 @@
-﻿using Cangjie.Core.Runtime;
+﻿
+using Cangjie.Core.Runtime;
+using Cangjie.Owners;
 
 namespace Cangjie.TypeSharp.Cli.HeaderScript;
 internal class HeaderScriptRuntimeContext : RuntimeContext<char>
