@@ -4,14 +4,6 @@ using Cangjie.TypeSharp.System;
 using Cangjie.TypeSharp.Cli;
 using CLIUtil = Cangjie.TypeSharp.Cli.Util;
 
-TSScriptEngine.Run("""
-    for(let item of test()){
-        console.log(item);
-    }
-    """);
-
-return;
-
 ArgsRouter argsRouter = new();
 argsRouter.Register(["run"], async (
     [ArgsIndex]string path) =>
