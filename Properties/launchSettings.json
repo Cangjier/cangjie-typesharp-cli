@@ -2,7 +2,7 @@
   "profiles": {
     "Cangjie.TypeSharp.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "service webhook --git github.com=cangjier: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,gitee.com=openplugin:04ae94c4d4624c758fd629e2b84317c1 --nuget oy2g7dltutuqvd5wdwrql2uflb5u2scevapfiq6dwzpok4"
+      "commandLineArgs": "run D:\\Downloads\\temp\\1.ts"
     }
   }
 }
