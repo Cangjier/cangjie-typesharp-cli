@@ -1,59 +1,79 @@
-﻿using TidyHPC.Routers.Args;
-using Cangjie.TypeSharp;
-using Cangjie.TypeSharp.System;
+﻿using Cangjie.TypeSharp;
 using Cangjie.TypeSharp.Cli;
+using Cangjie.TypeSharp.System;
+using System.Reflection;
+using TidyHPC.Extensions;
+using TidyHPC.LiteJson;
+using TidyHPC.Loggers;
+using TidyHPC.Routers.Args;
 using CLIUtil = Cangjie.TypeSharp.Cli.Util;
+
 
 ArgsRouter argsRouter = new();
 argsRouter.Register(["run"], async (
-    [ArgsIndex]string path) =>
+    [ArgsIndex]string path,
+    [Args] string[] fullArgs) =>
 {
-    context.args = args.Skip(2).ToArray();
-    if (File.Exists(path))
+    try
     {
-        context.script_path = Path.GetFullPath(path);
-        await TSScriptEngine.RunAsync(File.ReadAllText(context.script_path, CLIUtil.UTF8));
-    }
-    else if (Directory.Exists(path))
-    {
-        var files = Directory.GetFiles(path, "*.ts", SearchOption.AllDirectories);
-        // 找到main.ts或者index.ts文件
-        var mainFile = files.FirstOrDefault(item => Path.GetFileName(item).ToLower() == "main.ts" || Path.GetFileName(item).ToLower() == "index.ts");
-        if (mainFile == null)
+        context.args = fullArgs[2..];
+        if (File.Exists(path))
         {
-            Console.WriteLine("main.ts or index.ts not found");
-            return;
+            context.script_path = Path.GetFullPath(path);
+            await TSScriptEngine.RunAsync(File.ReadAllText(context.script_path, CLIUtil.UTF8));
         }
-        context.script_path = Path.GetFullPath(mainFile);
-        await TSScriptEngine.RunAsync(File.ReadAllText(context.script_path, CLIUtil.UTF8));
-    }
-    else if (path.StartsWith("http://") || path.StartsWith("https://"))
-    {
-        context.script_path = path;
-        var url = CLIUtil.GetRawUrl(path);
-        var content = await CLIUtil.HttpGetAsString(url);
-        Console.WriteLine($"get script from {url}");
-        await TSScriptEngine.RunAsync(content);
-    }
-    else
-    {
-        GitRepository gitRepository = new();
-        await gitRepository.Update();
-        var listResult = gitRepository.List();
-        if (listResult.Contains(path) == false)
+        else if (Directory.Exists(path))
         {
-            Console.WriteLine($"script {path} not found");
-            return;
+            var files = Directory.GetFiles(path, "*.ts", SearchOption.AllDirectories);
+            // 找到main.ts或者index.ts文件
+            var mainFile = files.FirstOrDefault(item => Path.GetFileName(item).ToLower() == "main.ts" || Path.GetFileName(item).ToLower() == "index.ts");
+            if (mainFile == null)
+            {
+                Console.WriteLine("main.ts or index.ts not found");
+                return;
+            }
+            context.script_path = Path.GetFullPath(mainFile);
+            await TSScriptEngine.RunAsync(File.ReadAllText(context.script_path, CLIUtil.UTF8));
         }
-        var scriptPath = gitRepository.GetScriptPath(path);
-        if (scriptPath == null)
+        else if (path.StartsWith("http://") || path.StartsWith("https://"))
         {
-            Console.WriteLine($"script {path} not found");
-            return;
+            context.script_path = path;
+            var url = CLIUtil.GetRawUrl(path);
+            var content = await CLIUtil.HttpGetAsString(url);
+            Console.WriteLine($"get script from {url}");
+            await TSScriptEngine.RunAsync(content);
         }
-        context.script_path = scriptPath;
-        await TSScriptEngine.RunAsync(File.ReadAllText(context.script_path, CLIUtil.UTF8));
+        else
+        {
+            GitRepository gitRepository = new();
+            await gitRepository.Update();
+            var listResult = gitRepository.List();
+            if (listResult.Contains(path) == false)
+            {
+                Console.WriteLine($"script {path} not found");
+                return;
+            }
+            var scriptPath = gitRepository.GetScriptPath(path);
+            if (scriptPath == null)
+            {
+                Console.WriteLine($"script {path} not found");
+                return;
+            }
+            context.script_path = scriptPath;
+            await TSScriptEngine.RunAsync(File.ReadAllText(context.script_path, CLIUtil.UTF8));
+        }
     }
+    catch(Exception e)
+    {
+        Logger.Error(e);
+        throw;
+    }
+});
+argsRouter.Register(["service"], async (
+    [Args] string[] fullArgs) =>
+{
+    string[] routeArgs = ["run", "service", .. fullArgs[1..]];
+    await argsRouter.Route(routeArgs);
 });
 argsRouter.Register(["list"],async () =>
 {
@@ -96,10 +116,8 @@ argsRouter.Register(["eval"], async (
 
 argsRouter.Register(["update"], async () =>
 {
-    await Task.CompletedTask;
     if(Environment.OSVersion.Platform== PlatformID.Win32NT)
     {
-        //https://github.com/Cangjier/type-sharp/releases/download/latest/tscl.exe
         var script = $"""
         @echo off
         setlocal
@@ -126,10 +144,19 @@ argsRouter.Register(["update"], async () =>
     }
     else
     {
-        context.startCmd(Directory.GetCurrentDirectory(), "wget --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
+        var output = Json.NewObject();
+        await context.cmdAsync(Environment.CurrentDirectory, "git config http.proxy", output);
+        var lines = output.GetOrCreateArray("lines");
+        if (lines.Count > 0 && lines[0].IsStringPredicate(self=>self.Trim().Length>0))
+        {
+            var proxy = lines[0].AsString;
+            await context.cmdAsync(Directory.GetCurrentDirectory(), $"wget -e \"http_proxy={proxy}\" --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
+        }
+        else
+        {
+            await context.cmdAsync(Directory.GetCurrentDirectory(), "wget --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
+        }
     }
-    
-    Environment.Exit(0);
 });
 argsRouter.Register(["init"],async () =>
 {
@@ -139,7 +166,7 @@ argsRouter.Register(["api"], ApiCommands.Run);
 argsRouter.Register([string.Empty], async () =>
 {
     await Task.CompletedTask;
-    Console.WriteLine("TypeSharp CLI 1.8.20241001.15");
+    Console.WriteLine($"TypeSharp CLI {Assembly.GetExecutingAssembly().GetName().Version}");
     Console.WriteLine("Usage:");
     Console.WriteLine("  tscl [run] <script_path> <script_args>");
     Console.WriteLine("  tscl [run] <script_url> <script_args>");

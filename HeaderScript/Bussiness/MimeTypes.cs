@@ -34,7 +34,7 @@ public class MimeTypes:IEnumerable<MimeType>,IReleasable
         var parseResult = StepEngine.Parse(owner, stepContext, textContext.Root.Data, false);
         var steps = parseResult.Steps;
 
-        HeaderScriptRuntimeContext memoryContext = new(owner);
+        HeaderScriptRuntimeContext memoryContext = new();
         steps.Run(memoryContext);
 
         var lastValue = memoryContext.GetLastObject().Value;

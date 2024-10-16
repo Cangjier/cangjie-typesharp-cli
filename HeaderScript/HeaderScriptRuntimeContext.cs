@@ -5,12 +5,17 @@ using Cangjie.Owners;
 namespace Cangjie.TypeSharp.Cli.HeaderScript;
 internal class HeaderScriptRuntimeContext : RuntimeContext<char>
 {
-    public HeaderScriptRuntimeContext(IOwner owner) : base(owner)
+    public HeaderScriptRuntimeContext() : base()
     {
     }
 
-    public override RuntimeContext<char> Clone()
+    public override RuntimeContext<char> CatchClone()
     {
-        return new HeaderScriptRuntimeContext(Owner);
+        return new HeaderScriptRuntimeContext();
+    }
+
+    public override RuntimeContext<char> CatchClone(List<string> catchFields)
+    {
+        return new HeaderScriptRuntimeContext();
     }
 }

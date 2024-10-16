@@ -1,4 +1,5 @@
 ﻿using Cangjie.TypeSharp.Cli.Apis;
+using Cangjie.TypeSharp.System;
 using TidyHPC.LiteJson;
 using TidyHPC.Routers;
 
@@ -11,6 +12,10 @@ public class ApiCommands
 {
     private static async Task RunApi(Json result, string? inputPath, Json inputJson, Json arguments, string? outputPath, NetMessageInterface msg)
     {
+        if (inputPath != null)
+        {
+            context.script_path = inputPath;
+        }
         var treatment = new Treatment(inputJson.GetOrCreateObject("Parameters"));
         //植入变量
         treatment.CoverParametersBy(arguments);
@@ -65,17 +70,21 @@ public class ApiCommands
     /// <returns></returns>
     public static async Task Run(
     [ArgsAliases("-i", "--input")] string? inputPath,
-    [ArgsAliases("-o", "--output")] string? outputPath,
-    [ArgsAliases("-a", "--arguments")] string? argumentsPath)
+    [ArgsAliases("-o", "--output")] string? outputPath = null,
+    [ArgsAliases("-a", "--arguments")] string? argumentsPath = null)
     {
         DateTime startTime = DateTime.Now;
         NetMessageInterface msg = NetMessageInterface.New();
         Json result = Json.NewObject();
         try
         {
+            if (inputPath == null)
+            {
+                throw new Exception("输入路径为空");
+            }
             if (outputPath == null)
             {
-                throw new Exception("输出不能为空");
+                outputPath = Path.Combine(Environment.CurrentDirectory, $"{Path.GetFileNameWithoutExtension(inputPath)}-output.json");
             }
             outputPath = Path.GetFullPath(outputPath);
             if (argumentsPath != null)
@@ -84,7 +93,7 @@ public class ApiCommands
             }
             var inputJson = Json.TryLoad(inputPath, () => throw new Exception($"输入Json非法，路径为：{inputPath}"));
             result.Set("Request", inputJson);
-            var arguments = Json.TryLoad(argumentsPath, Json.NewObject);
+            var arguments = File.Exists(argumentsPath) ? Json.TryLoad(argumentsPath, Json.NewObject) : Json.NewObject();
             await RunApi(result, inputPath, inputJson, arguments, outputPath, msg);
         }
         catch (Exception e)

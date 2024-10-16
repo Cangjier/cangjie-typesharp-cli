@@ -3,7 +3,7 @@
 namespace Cangjie.TypeSharp.Cli;
 public class GitRepository
 {
-    private string GitRepositoryDirectory { get; } = Path.Combine(Path.GetTempPath(), "553809D6-8840-47B7-BDCA-AE6A17518B86");
+    private string GitRepositoryDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".tscl/repository");
 
     private string CliDirectory => Path.Combine(GitRepositoryDirectory, "cli");
 

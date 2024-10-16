@@ -33,7 +33,7 @@ public class Treatment
     {
         return TSScriptEngine.Run(script, stepContext =>
         {
-            stepContext.IsSupportDefaultField = true;
+            stepContext.MountVariableSpace(Parameters);
         }, runtimeContext =>
         {
             runtimeContext.MountVariableSpace(Parameters);
