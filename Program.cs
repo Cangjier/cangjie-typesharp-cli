@@ -150,7 +150,7 @@ argsRouter.Register(["update"], async () =>
         if (lines.Count > 0 && lines[0].IsStringPredicate(self=>self.Trim().Length>0))
         {
             var proxy = lines[0].AsString;
-            await context.cmdAsync(Directory.GetCurrentDirectory(), $"wget -e \"http_proxy={proxy}\" --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
+            await context.cmdAsync(Directory.GetCurrentDirectory(), $"wget -e \"https_proxy={proxy}\" --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
         }
         else
         {
