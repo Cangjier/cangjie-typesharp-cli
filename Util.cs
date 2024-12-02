@@ -151,4 +151,14 @@ public class Util
         return path;
     }
 
+    public static string BytesToHexString(byte[] bytes)
+    {
+        StringBuilder builder = new();
+        foreach (var item in bytes)
+        {
+            builder.Append(item.ToString("X2"));
+        }
+        return builder.ToString();
+    }
+
 }

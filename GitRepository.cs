@@ -3,7 +3,27 @@
 namespace Cangjie.TypeSharp.Cli;
 public class GitRepository
 {
-    private string GitRepositoryDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".tscl/repository");
+    public string RepositoryUrl { get; set; } = "https://github.com/Cangjier/type-sharp.git";
+
+    public string ApplicationName { get; set; } = ".tscl";
+
+    private string _gitRepositoryDirectory = string.Empty;
+
+    public string GitRepositoryDirectory
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_gitRepositoryDirectory))
+            {
+                _gitRepositoryDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), $"{ApplicationName}/repository");
+            }
+            return _gitRepositoryDirectory;
+        }
+        set
+        {
+            _gitRepositoryDirectory = value;
+        }
+    }
 
     private string CliDirectory => Path.Combine(GitRepositoryDirectory, "cli");
 
@@ -17,19 +37,19 @@ public class GitRepository
         var gitDirectory = Path.Combine(GitRepositoryDirectory, ".git");
         if (Directory.Exists(gitDirectory) == false)
         {
-            await context.cmdAsync(GitRepositoryDirectory, "git clone --depth 1 https://github.com/Cangjier/type-sharp.git .");
+            await context.cmdAsync(GitRepositoryDirectory, $"git clone --depth 1 {RepositoryUrl} .");
         }
         // 执行git pull
         await context.cmdAsync(GitRepositoryDirectory, "git pull");
     }
 
-    public IEnumerable<string> List()
+    public IEnumerable<string> ListCli()
     {
         if (Directory.Exists(CliDirectory) == false) return [];
         return Directory.GetDirectories(CliDirectory).Select(item => Path.GetFileName(item));
     }
 
-    public string? GetScriptPath(string scriptName)
+    public string? GetCliScriptPath(string scriptName)
     {
         var scriptDirectory = Path.Combine(CliDirectory, scriptName);
         if (Directory.Exists(scriptDirectory) == false) return null;

@@ -39,6 +39,14 @@ public class ApiCommands
         {
             inputJson.Set("UrlWithQueryParameters", request.UrlWithQueryParameters);
         }
+        string? requestPath = null;
+        if (outputPath != null)
+        {
+            requestPath = Path.Combine(Path.GetDirectoryName(outputPath) ?? "", $"{Path.GetFileNameWithoutExtension(outputPath)}-request.json");
+            Json toSave = Json.NewObject();
+            toSave.Set("Request", inputJson);
+            toSave.Save(requestPath);
+        }
         Response? response = await Client.Send(request, msg);
         if (response == null)
         {
