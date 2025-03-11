@@ -2,7 +2,7 @@
   "profiles": {
     "Cangjie.TypeSharp.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "eval \"JSON.stringify({name:'ldm',age:18},null,0)\""
+      "commandLineArgs": "run C:\\Users\\moodlee_106895394698\\Documents\\Temp\\1.ts"
     },
     "Run_1ts": {
       "commandName": "Project",

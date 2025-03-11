@@ -9,6 +9,6 @@
     <AssemblyName>tscl</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Cangjie.TypeSharp" Version="1.0.18" />
+    <ProjectReference Include="..\cangjie-typesharp\Cangjie.TypeSharp.csproj" />
   </ItemGroup>
 </Project>
