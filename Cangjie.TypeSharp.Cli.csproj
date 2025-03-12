@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.0.7</Version>
     <AssemblyName>tscl</AssemblyName>
-    <!-- <PublishProfile>linux-x64-vscode</PublishProfile> -->
+    <!-- <PublishProfile>linux-x64</PublishProfile> -->
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\cangjie-typesharp\Cangjie.TypeSharp.csproj" />

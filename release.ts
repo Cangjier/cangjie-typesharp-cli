@@ -31,6 +31,9 @@ let main = async () => {
     // 先编译
     await cmdAsync(Environment.CurrentDirectory, "dotnet publish -p:PublishProfile=linux-x64");
     await cmdAsync(Environment.CurrentDirectory, "dotnet publish -p:PublishProfile=win-x64");
+    console.log(`Is need to upload files?`);
+    let isNeed = Console.ReadLine();
+    if (isNeed != "y" && isNeed != "Y") return;
     await execAsync({
         filePath: Environment.ProcessPath,
         arguments: ["run", "gitapis", "release", gitUrl, tagName,
