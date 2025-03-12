@@ -7,11 +7,12 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.0.7</Version>
     <AssemblyName>tscl</AssemblyName>
+    <!-- <PublishProfile>linux-x64-vscode</PublishProfile> -->
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\cangjie-typesharp\Cangjie.TypeSharp.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cangjie.TypeSharp" Version="1.0.18" />
+    <PackageReference Include="Cangjie.TypeSharp" Version="*" />
   </ItemGroup>
 </Project>
