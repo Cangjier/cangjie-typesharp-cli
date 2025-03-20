@@ -6,9 +6,11 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using TidyHPC.LiteJson;
 using TidyHPC.Loggers;
 using TidyHPC.Routers.Args;
 using CLIUtil = Cangjie.TypeSharp.Cli.Util;
+
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
