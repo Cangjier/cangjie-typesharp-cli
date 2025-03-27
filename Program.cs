@@ -54,7 +54,6 @@ AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
     }
 };
 
-
 void help()
 {
     Console.WriteLine("Usage:");

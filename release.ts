@@ -29,8 +29,20 @@ let main = async () => {
     File.WriteAllText("token.txt", token);
 
     // 先编译
-    await cmdAsync(Environment.CurrentDirectory, "dotnet publish -p:PublishProfile=linux-x64");
-    await cmdAsync(Environment.CurrentDirectory, "dotnet publish -p:PublishProfile=win-x64");
+    let cmdLinuxX64 = "dotnet publish -p:PublishProfile=linux-x64 --no-cache";
+    let cmdWinX64 = "dotnet publish -p:PublishProfile=win-x64 --no-cache";
+    let cmdResult = await cmdAsync(Environment.CurrentDirectory, cmdLinuxX64);
+    if (cmdResult.exitCode != 0) {
+        console.log(`cmd: ${cmdLinuxX64}`);
+        console.log(cmdResult.output);
+        console.log(cmdResult.error);
+    }
+    cmdResult = await cmdAsync(Environment.CurrentDirectory, cmdWinX64);
+    if (cmdResult.exitCode != 0) {
+        console.log(`cmd: ${cmdWinX64}`);
+        console.log(cmdResult.output);
+        console.log(cmdResult.error);
+    }
     console.log(`Is need to upload files?`);
     let isNeed = Console.ReadLine();
     if (isNeed != "y" && isNeed != "Y") return;
