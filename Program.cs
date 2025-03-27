@@ -85,10 +85,12 @@ void help()
     Console.WriteLine("  tscl run https://raw.githubusercontent.com/Cangjier/type-sharp/main/cli/create-react-component/main.ts");
     Console.WriteLine("  tscl run https://raw.githubusercontent.com/Cangjier/type-sharp/main/cli/create-react-component/main.ts arg1 arg2");
     Console.WriteLine($" tscl {Assembly.GetExecutingAssembly().GetName().Version}");
+    Console.WriteLine($" where {Environment.ProcessPath}");
 }
 
 ArgsRouter argsRouter = new();
 argsRouter.Register(["run"], CommonCommands.Run);
+argsRouter.Register(["where"], CommonCommands.Where);
 argsRouter.Register(["service"], async (
     [Args] string[] fullArgs) =>
 {
