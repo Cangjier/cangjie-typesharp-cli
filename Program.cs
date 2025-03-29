@@ -96,6 +96,12 @@ argsRouter.Register(["service"], async (
     string[] routeArgs = ["run", "service", .. fullArgs[1..]];
     await argsRouter.Route(routeArgs);
 });
+argsRouter.Register(["app"], async (
+    [Args] string[] fullArgs) =>
+{
+    string[] routeArgs = ["run", "app", .. fullArgs[1..]];
+    await argsRouter.Route(routeArgs);
+});
 argsRouter.Register(["list"],CommonCommands.ListScripts);
 argsRouter.Register(["eval"], async (
     [SubArgs] string[] subArgs) =>
