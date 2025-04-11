@@ -9,9 +9,9 @@
     <AssemblyName>tscl</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cangjie-typesharp\Cangjie.TypeSharp.csproj" />
+    <ProjectReference Include="..\cangjie-typesharp\Cangjie.TypeSharp.csproj" Condition="Exists('..\cangjie-typesharp\Cangjie.TypeSharp.csproj')" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cangjie.TypeSharp" Version="*" />
+    <PackageReference Include="Cangjie.TypeSharp" Version="*" Condition="!Exists('..\cangjie-typesharp\Cangjie.TypeSharp.csproj')" />
   </ItemGroup>
 </Project>
