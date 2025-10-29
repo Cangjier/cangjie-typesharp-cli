@@ -12,7 +12,6 @@ using TidyHPC.Routers.Args;
 using CLIUtil = Cangjie.TypeSharp.Cli.Util;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
 AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
 {
     var path = Environment.ProcessPath;
@@ -109,7 +108,7 @@ argsRouter.Register(["eval"], async (
     Context context = new();
     for (int i = 0; i < subArgs.Length; i++)
     {
-        var result = await TSScriptEngine.RunAsync(string.Empty,subArgs[i], context, stepContext =>
+        var result = await TSScriptEngine.RunAsync(string.Empty, subArgs[i], context, stepContext =>
         {
             stepContext.UsingNamespaces.Add("TidyHPC.LiteJson");
             stepContext.UsingNamespaces.Add("System.Text");
@@ -378,6 +377,14 @@ argsRouter.Register([string.Empty], async () =>
     {
         help();
     }
+});
+argsRouter.Register(["text"], async (
+    [ArgsIndex]string scriptPath
+    ) =>
+{
+    await Task.CompletedTask;
+    var interfaces = typescript.getAllInterfaces(File.ReadAllText(scriptPath, Encoding.UTF8));
+    Console.WriteLine(interfaces);
 });
 
 Logger.Info($"tscl {Assembly.GetExecutingAssembly().GetName().Version}");

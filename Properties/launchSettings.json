@@ -2,7 +2,7 @@
   "profiles": {
     "Cangjie.TypeSharp.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "run C:\\Users\\moodlee_106895394698\\Documents\\Temp\\1.ts"
+      "commandLineArgs": "run C:\\Users\\moodlee_106895394698\\Documents\\Cursor\\novel-plugins\\cli\\auto\\test.ts"
     },
     "Run_1ts": {
       "commandName": "Project",

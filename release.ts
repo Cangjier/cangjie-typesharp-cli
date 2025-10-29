@@ -29,15 +29,15 @@ let main = async () => {
     File.WriteAllText("token.txt", token);
 
     // 先编译
-    let cmdLinuxX64 = "dotnet publish -p:PublishProfile=linux-x64 --no-cache";
-    let cmdWinX64 = "dotnet publish -p:PublishProfile=win-x64 --no-cache";
-    let cmdResult = await cmdAsync(Environment.CurrentDirectory, cmdLinuxX64);
+    let cmdLinuxX64 = "dotnet publish -p:PublishProfile=linux-x64 -f:net8.0 --no-cache";
+    let cmdWinX64 = "dotnet publish -p:PublishProfile=win-x64 -f:net8.0 --no-cache";
+    let cmdResult = await cmdAsync(Environment.CurrentDirectory, cmdLinuxX64,{redirect:true});
     if (cmdResult.exitCode != 0) {
         console.log(`cmd: ${cmdLinuxX64}`);
         console.log(cmdResult.output);
         console.log(cmdResult.error);
     }
-    cmdResult = await cmdAsync(Environment.CurrentDirectory, cmdWinX64);
+    cmdResult = await cmdAsync(Environment.CurrentDirectory, cmdWinX64,{redirect:true});
     if (cmdResult.exitCode != 0) {
         console.log(`cmd: ${cmdWinX64}`);
         console.log(cmdResult.output);
