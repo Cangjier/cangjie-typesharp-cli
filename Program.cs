@@ -63,6 +63,7 @@ void help()
     Console.WriteLine("  tscl [update]");
     Console.WriteLine("  tscl [init]");
     Console.WriteLine("  tscl [api] -i <input_path> -o <output_path> -a <args_path>");
+    Console.WriteLine("  tscl [viz] <port>");
     Console.WriteLine("  tscl");
     Console.WriteLine("Options:");
     Console.WriteLine("  run: run script");
@@ -70,6 +71,7 @@ void help()
     Console.WriteLine("  update: update tsc");
     Console.WriteLine("  init: init project");
     Console.WriteLine("  api: request http/https api");
+    Console.WriteLine("  viz: start viz server");
     Console.WriteLine("  script_path: script file path");
     Console.WriteLine("  script_url: script url");
     Console.WriteLine("  script_name: script name in respository");
@@ -102,6 +104,7 @@ argsRouter.Register(["app"], async (
     await argsRouter.Route(routeArgs);
 });
 argsRouter.Register(["list"],CommonCommands.ListScripts);
+argsRouter.Register(["viz"], CommonCommands.Viz);
 argsRouter.Register(["eval"], async (
     [SubArgs] string[] subArgs) =>
 {
