@@ -276,20 +276,32 @@ argsRouter.Register([string.Empty], async () =>
     {
         processStream.Seek(-splitBytes.Length, SeekOrigin.End);
         byte[] lastBytes = new byte[splitBytes.Length];
+        #if NET10_0_OR_GREATER
+        await processStream.ReadExactlyAsync(lastBytes);
+        #else
         await processStream.ReadAsync(lastBytes);
+        #endif
         if(lastBytes.SequenceEqual(splitBytes))
         {
             // 读取标识符
             int offset = -splitBytes.Length - sizeof(int);
             processStream.Seek(offset, SeekOrigin.End);
             byte[] flagBytes = new byte[sizeof(int)];
+            #if NET10_0_OR_GREATER
+            await processStream.ReadExactlyAsync(flagBytes);
+            #else
             await processStream.ReadAsync(flagBytes);
+            #endif
             PackageFlag flag = (PackageFlag)BitConverter.ToInt32(flagBytes);
             // 读取md5 bytes
             offset += -16;
             processStream.Seek(offset, SeekOrigin.End);
             byte[] md5Bytes = new byte[16];
+            #if NET10_0_OR_GREATER
+            await processStream.ReadExactlyAsync(md5Bytes);
+            #else
             await processStream.ReadAsync(md5Bytes);
+            #endif
             var md5Hex = CLIUtil.BytesToHexString(md5Bytes);
             var tempDirectory = Path.Combine(Path.GetTempPath(), md5Hex);
             if (File.Exists(Path.Combine(tempDirectory, ".lock")))
@@ -310,19 +322,31 @@ argsRouter.Register([string.Empty], async () =>
                 offset += -sizeof(int);
                 processStream.Seek(offset, SeekOrigin.End);
                 byte[] lengthBytes = new byte[sizeof(int)];
+                #if NET10_0_OR_GREATER
+                await processStream.ReadExactlyAsync(lengthBytes);
+                #else
                 await processStream.ReadAsync(lengthBytes);
+                #endif
                 int contentLength = BitConverter.ToInt32(lengthBytes);
 
                 // 读取contentBytes
                 offset += -contentLength;
                 processStream.Seek(offset, SeekOrigin.End);
                 byte[] contentBytes = new byte[contentLength];
+                #if NET10_0_OR_GREATER
+                await processStream.ReadExactlyAsync(contentBytes);
+                #else
                 await processStream.ReadAsync(contentBytes);
+                #endif
                 // 读取splitBytes
                 offset += -splitBytes.Length;
                 processStream.Seek(offset, SeekOrigin.End);
                 byte[] splitBytesBytes = new byte[splitBytes.Length];
+                #if NET10_0_OR_GREATER
+                await processStream.ReadExactlyAsync(splitBytesBytes);
+                #else
                 await processStream.ReadAsync(splitBytesBytes);
+                #endif
                 if (splitBytesBytes.SequenceEqual(splitBytes))
                 {
                     Directory.CreateDirectory(tempDirectory);
