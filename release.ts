@@ -9,8 +9,8 @@ let main = async () => {
     let gitUrl = "https://github.com/Cangjier/type-sharp.git";
     let tagName = "latest";
     let toReleaseFiles = [
-        `${Environment.CurrentDirectory}/bin/Release/net8.0/linux-x64/publish/tscl`,
-        `${Environment.CurrentDirectory}/bin/Release/net8.0/win-x64/publish/tscl.exe`
+        `${Environment.CurrentDirectory}/bin/Release/net10.0/linux-x64/publish/tscl`,
+        `${Environment.CurrentDirectory}/bin/Release/net10.0/win-x64/publish/tscl.exe`
     ];
     let token = "";
     if (File.Exists("token.txt")) {

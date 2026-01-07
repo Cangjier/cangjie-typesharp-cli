@@ -19,12 +19,12 @@ AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
     {
         return;
     }
-    if (path.EndsWith(".bak.exe")==true)
+    if (path.EndsWith(".bak.exe") == true)
     {
         return;
     }
     var updatePath = path + ".update";
-    if(File.Exists(updatePath))
+    if (File.Exists(updatePath))
     {
         var bakPath = Path.Combine(Path.GetDirectoryName(path) ?? "", Path.GetFileNameWithoutExtension(path) + ".bak.exe");
         if (File.Exists(bakPath) == false)
@@ -103,8 +103,7 @@ argsRouter.Register(["app"], async (
     string[] routeArgs = ["run", "app", .. fullArgs[1..]];
     await argsRouter.Route(routeArgs);
 });
-argsRouter.Register(["list"],CommonCommands.ListScripts);
-argsRouter.Register(["viz"], CommonCommands.Viz);
+argsRouter.Register(["list"], CommonCommands.ListScripts);
 argsRouter.Register(["eval"], async (
     [SubArgs] string[] subArgs) =>
 {
@@ -122,7 +121,7 @@ argsRouter.Register(["eval"], async (
         });
         if (subArgs[i].Contains(";"))
         {
-            
+
             Console.WriteLine($"[{i}]: multiply line");
         }
         else
@@ -134,7 +133,7 @@ argsRouter.Register(["eval"], async (
 
 argsRouter.Register(["update"], async () =>
 {
-    if(Environment.OSVersion.Platform== PlatformID.Win32NT)
+    if (Environment.OSVersion.Platform == PlatformID.Win32NT)
     {
         var script = $"""
         @echo off
@@ -166,7 +165,7 @@ argsRouter.Register(["update"], async () =>
     else
     {
         var result = await staticContext.cmdAsync(Environment.CurrentDirectory, "git config http.proxy");
-        if (result.output.Length>0)
+        if (result.output.Length > 0)
         {
             var proxy = result.output;
             await staticContext.cmdAsync(Directory.GetCurrentDirectory(), $"wget -e \"https_proxy={proxy}\" --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
@@ -177,13 +176,13 @@ argsRouter.Register(["update"], async () =>
         }
     }
 });
-argsRouter.Register(["init"],async () =>
+argsRouter.Register(["init"], async () =>
 {
     await argsRouter.Route(["run", "init"]);
 });
 argsRouter.Register(["api"], ApiCommands.Run);
-argsRouter.Register(["package"],async (
-    [ArgsIndex]string path) =>
+argsRouter.Register(["package"], async (
+    [ArgsIndex] string path) =>
 {
     // 对脚本进行打包成可执行文件
     // ----F974135D-D9A0-43E5-BEAD-4DA7FBD4DF34----
@@ -192,7 +191,7 @@ argsRouter.Register(["package"],async (
     var splitBytes = Cangjie.TypeSharp.Util.UTF8.GetBytes("----F974135D-D9A0-43E5-BEAD-4DA7FBD4DF34----");
     bool needDelete = false;
     var outputProgramPath = string.Empty;
-    PackageFlag flag =  PackageFlag.File;
+    PackageFlag flag = PackageFlag.File;
     if (path.StartsWith("http://") || path.StartsWith("https://"))
     {
         flag = PackageFlag.Url;
@@ -200,7 +199,7 @@ argsRouter.Register(["package"],async (
     else if (File.Exists(path))
     {
         flag = PackageFlag.File;
-        outputProgramPath = Path.Combine(Path.GetDirectoryName(path)??"", Path.GetFileNameWithoutExtension(path) + ".exe");
+        outputProgramPath = Path.Combine(Path.GetDirectoryName(path) ?? "", Path.GetFileNameWithoutExtension(path) + ".exe");
         var tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempDirectory);
         var tempFilePath = Path.Combine(tempDirectory, "index.ts");
@@ -211,7 +210,7 @@ argsRouter.Register(["package"],async (
     else
     {
         flag = PackageFlag.Directory;
-        outputProgramPath = Path.Combine(Path.GetDirectoryName(path)??"", Path.GetFileName(path) + ".exe");
+        outputProgramPath = Path.Combine(Path.GetDirectoryName(path) ?? "", Path.GetFileName(path) + ".exe");
     }
     // 将path下所有文件进行打包成zip流的bytes
     byte[] contentBytes;
@@ -272,41 +271,41 @@ argsRouter.Register([string.Empty], async () =>
     var splitBytes = Cangjie.TypeSharp.Util.UTF8.GetBytes("----F974135D-D9A0-43E5-BEAD-4DA7FBD4DF34----");
     // 读取程序的末尾，判断是否是splitBytes
     string mainPath = string.Empty;
-    using (var processStream = File.OpenRead(Environment.ProcessPath??throw new NullReferenceException()))
+    using (var processStream = File.OpenRead(Environment.ProcessPath ?? throw new NullReferenceException()))
     {
         processStream.Seek(-splitBytes.Length, SeekOrigin.End);
         byte[] lastBytes = new byte[splitBytes.Length];
-        #if NET10_0_OR_GREATER
+#if NET10_0_OR_GREATER
         await processStream.ReadExactlyAsync(lastBytes);
-        #else
+#else
         await processStream.ReadAsync(lastBytes);
-        #endif
-        if(lastBytes.SequenceEqual(splitBytes))
+#endif
+        if (lastBytes.SequenceEqual(splitBytes))
         {
             // 读取标识符
             int offset = -splitBytes.Length - sizeof(int);
             processStream.Seek(offset, SeekOrigin.End);
             byte[] flagBytes = new byte[sizeof(int)];
-            #if NET10_0_OR_GREATER
+#if NET10_0_OR_GREATER
             await processStream.ReadExactlyAsync(flagBytes);
-            #else
+#else
             await processStream.ReadAsync(flagBytes);
-            #endif
+#endif
             PackageFlag flag = (PackageFlag)BitConverter.ToInt32(flagBytes);
             // 读取md5 bytes
             offset += -16;
             processStream.Seek(offset, SeekOrigin.End);
             byte[] md5Bytes = new byte[16];
-            #if NET10_0_OR_GREATER
+#if NET10_0_OR_GREATER
             await processStream.ReadExactlyAsync(md5Bytes);
-            #else
+#else
             await processStream.ReadAsync(md5Bytes);
-            #endif
+#endif
             var md5Hex = CLIUtil.BytesToHexString(md5Bytes);
             var tempDirectory = Path.Combine(Path.GetTempPath(), md5Hex);
             if (File.Exists(Path.Combine(tempDirectory, ".lock")))
             {
-                if(flag == PackageFlag.Url)
+                if (flag == PackageFlag.Url)
                 {
                     if (Directory.Exists(Path.Combine(tempDirectory, ".git")))
                     {
@@ -322,31 +321,31 @@ argsRouter.Register([string.Empty], async () =>
                 offset += -sizeof(int);
                 processStream.Seek(offset, SeekOrigin.End);
                 byte[] lengthBytes = new byte[sizeof(int)];
-                #if NET10_0_OR_GREATER
+#if NET10_0_OR_GREATER
                 await processStream.ReadExactlyAsync(lengthBytes);
-                #else
+#else
                 await processStream.ReadAsync(lengthBytes);
-                #endif
+#endif
                 int contentLength = BitConverter.ToInt32(lengthBytes);
 
                 // 读取contentBytes
                 offset += -contentLength;
                 processStream.Seek(offset, SeekOrigin.End);
                 byte[] contentBytes = new byte[contentLength];
-                #if NET10_0_OR_GREATER
+#if NET10_0_OR_GREATER
                 await processStream.ReadExactlyAsync(contentBytes);
-                #else
+#else
                 await processStream.ReadAsync(contentBytes);
-                #endif
+#endif
                 // 读取splitBytes
                 offset += -splitBytes.Length;
                 processStream.Seek(offset, SeekOrigin.End);
                 byte[] splitBytesBytes = new byte[splitBytes.Length];
-                #if NET10_0_OR_GREATER
+#if NET10_0_OR_GREATER
                 await processStream.ReadExactlyAsync(splitBytesBytes);
-                #else
+#else
                 await processStream.ReadAsync(splitBytesBytes);
-                #endif
+#endif
                 if (splitBytesBytes.SequenceEqual(splitBytes))
                 {
                     Directory.CreateDirectory(tempDirectory);
@@ -406,7 +405,7 @@ argsRouter.Register([string.Empty], async () =>
     }
 });
 argsRouter.Register(["text"], async (
-    [ArgsIndex]string scriptPath
+    [ArgsIndex] string scriptPath
     ) =>
 {
     await Task.CompletedTask;
@@ -415,5 +414,11 @@ argsRouter.Register(["text"], async (
 });
 
 Logger.Info($"tscl {Assembly.GetExecutingAssembly().GetName().Version}");
+Console.CancelKeyPress += (sender, e) =>
+{
+    Environment.Exit(0);
+};
 await argsRouter.Route(args);
-await Logger.LoggerFile.QueueLogger.WaitForEmpty();
+Logger.Info("Waiting for logger to be empty");
+await Logger.LoggerFile.QueueLogger.WaitForEmpty(TimeSpan.FromSeconds(1));
+Logger.Info("Logger is empty");

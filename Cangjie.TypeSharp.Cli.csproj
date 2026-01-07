@@ -9,13 +9,16 @@
     <AssemblyName>tscl</AssemblyName>
 	<LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <!--<ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\cangjie-typesharp\Cangjie.TypeSharp.csproj" Condition="Exists('..\cangjie-typesharp\Cangjie.TypeSharp.csproj')" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Cangjie.TypeSharp" Version="*" Condition="!Exists('..\cangjie-typesharp\Cangjie.TypeSharp.csproj')" />
-  </ItemGroup>-->
-	<ItemGroup>
+  </ItemGroup>
+	<!-- <ItemGroup>
 		<PackageReference Include="Cangjie.TypeSharp" Version="*"/>
-	</ItemGroup>
+	</ItemGroup> -->
+  <!-- <ItemGroup>
+    <ProjectReference Include="..\cangjie-typesharp\Cangjie.TypeSharp.csproj"/>
+  </ItemGroup> -->
 </Project>
