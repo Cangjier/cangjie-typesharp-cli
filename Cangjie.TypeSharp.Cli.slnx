@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../cangjie-typesharp/Cangjie.TypeSharp.csproj" />
+  <Project Path="../cangjie/Cangjie.csproj" />
+  <Project Path="../tidy-hpc/TidyHPC.csproj" />
+  <Project Path="Cangjie.TypeSharp.Cli.csproj" />
+</Solution>

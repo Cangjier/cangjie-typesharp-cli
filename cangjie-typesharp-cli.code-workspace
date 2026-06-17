@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../cangjie-typesharp"
+		},
+		{
+			"path": "../cangjie"
+		},
+		{
+			"path": "../tidy-hpc"
+		}
+	],
+	"settings": {}
+}
