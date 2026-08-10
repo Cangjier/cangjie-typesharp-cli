@@ -2,11 +2,11 @@
   "profiles": {
     "Cangjie.TypeSharp.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "run v2fly"
+      "commandLineArgs": "run C:\\Users\\Admin\\Documents\\GitHub\\ai-worker\\end\\index.ts \"整理成使用报告\" C:\\Users\\Admin\\Documents\\GitHub\\ai-worker\\end"
     },
-    "Run_1ts": {
+    "Test": {
       "commandName": "Project",
-      "commandLineArgs": "run C:\\Users\\moodlee_106895394698\\Documents\\Temp\\1.ts"
+      "commandLineArgs": "run C:\\Users\\Admin\\Documents\\GitHub\\shumu-novel\\end\\file\\test.ts"
     }
   }
 }

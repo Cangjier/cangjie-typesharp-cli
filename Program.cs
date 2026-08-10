@@ -20,33 +20,38 @@ AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
     {
         return;
     }
+
     if (path.EndsWith(".bak.exe") == true)
     {
         return;
     }
+
     var updatePath = path + ".update";
     if (File.Exists(updatePath))
     {
-        var bakPath = Path.Combine(Path.GetDirectoryName(path) ?? "", Path.GetFileNameWithoutExtension(path) + ".bak.exe");
+        var bakPath = Path.Combine(Path.GetDirectoryName(path) ?? "",
+            Path.GetFileNameWithoutExtension(path) + ".bak.exe");
         if (File.Exists(bakPath) == false)
         {
             File.Copy(path, bakPath);
         }
+
         var script = """
-        await Task.Delay(1000);
-        let fileName = Path.GetFileNameWithoutExtension(Environment.ProcessPath);
-        fileName = Path.GetFileNameWithoutExtension(fileName)+".exe";
-        let path = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath),fileName);
-        let updatePath = path + ".update";
-        File.Copy(updatePath,path,true);
-        File.Delete(updatePath);
-        """;
+                     await Task.Delay(1000);
+                     let fileName = Path.GetFileNameWithoutExtension(Environment.ProcessPath);
+                     fileName = Path.GetFileNameWithoutExtension(fileName)+".exe";
+                     let path = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath),fileName);
+                     let updatePath = path + ".update";
+                     File.Copy(updatePath,path,true);
+                     File.Delete(updatePath);
+                     """;
         var scriptPath = Path.Combine(Path.GetTempPath(), "update-tscl.bak.ts");
         File.WriteAllText(scriptPath, script, CLIUtil.UTF8);
         staticContext.start(new()
         {
             filePath = bakPath,
-            arguments = [
+            arguments =
+            [
                 "run",
                 scriptPath
             ]
@@ -83,11 +88,14 @@ void help()
     Console.WriteLine("Examples:");
     Console.WriteLine("  tscl run ./main.ts");
     Console.WriteLine("  tscl run ./main.ts arg1 arg2");
-    Console.WriteLine("  tscl run https://raw.githubusercontent.com/Cangjier/type-sharp/main/cli/create-react-component/main.ts");
-    Console.WriteLine("  tscl run https://raw.githubusercontent.com/Cangjier/type-sharp/main/cli/create-react-component/main.ts arg1 arg2");
+    Console.WriteLine(
+        "  tscl run https://raw.githubusercontent.com/Cangjier/type-sharp/main/cli/create-react-component/main.ts");
+    Console.WriteLine(
+        "  tscl run https://raw.githubusercontent.com/Cangjier/type-sharp/main/cli/create-react-component/main.ts arg1 arg2");
     Console.WriteLine($" tscl {Assembly.GetExecutingAssembly().GetName().Version}");
     Console.WriteLine($" where {Environment.ProcessPath}");
 }
+
 ArgsRouter argsRouter = new();
 argsRouter.Register(["run"], CommonCommands.Run);
 argsRouter.Register(["where"], CommonCommands.Where);
@@ -115,13 +123,9 @@ argsRouter.Register(["eval"], async (
             stepContext.UsingNamespaces.Add("TidyHPC.LiteJson");
             stepContext.UsingNamespaces.Add("System.Text");
             stepContext.UsingNamespaces.Add("System.IO");
-        }, runtimeContext =>
-        {
-
-        });
+        }, runtimeContext => { });
         if (subArgs[i].Contains(";"))
         {
-
             Console.WriteLine($"[{i}]: multiply line");
         }
         else
@@ -136,25 +140,25 @@ argsRouter.Register(["update"], async () =>
     if (Environment.OSVersion.Platform == PlatformID.Win32NT)
     {
         var script = $"""
-        @echo off
-        setlocal
-        set "url=https://github.com/Cangjier/type-sharp/releases/download/latest/tscl.exe"
-        set "target={Environment.ProcessPath}"
-        set "tempPath={Path.GetTempFileName()}"
-        echo download %url% to %tempPath%
-        powershell -Command "Invoke-WebRequest -Uri '%url%' -OutFile '%tempPath%'"
+                      @echo off
+                      setlocal
+                      set "url=https://github.com/Cangjier/type-sharp/releases/download/latest/tscl.exe"
+                      set "target={Environment.ProcessPath}"
+                      set "tempPath={Path.GetTempFileName()}"
+                      echo download %url% to %tempPath%
+                      powershell -Command "Invoke-WebRequest -Uri '%url%' -OutFile '%tempPath%'"
 
-        if exist "%tempPath%" (
-            :: move temp file to target
-            move /y "%tempPath%" "%target%"
-            echo download success.
-        ) else (
-            echo download failed.
-        )
-        endlocal
-        pause
-        
-        """;
+                      if exist "%tempPath%" (
+                          :: move temp file to target
+                          move /y "%tempPath%" "%target%"
+                          echo download success.
+                      ) else (
+                          echo download failed.
+                      )
+                      endlocal
+                      pause
+
+                      """;
         var scriptPath = Path.Combine(Path.GetTempPath(), "update-tscl.bat");
         await File.WriteAllTextAsync(scriptPath, script, CLIUtil.UTF8);
         staticContext.start(new()
@@ -168,23 +172,22 @@ argsRouter.Register(["update"], async () =>
         if (result.output.Length > 0)
         {
             var proxy = result.output;
-            await staticContext.cmdAsync(Directory.GetCurrentDirectory(), $"wget -e \"https_proxy={proxy}\" --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
+            await staticContext.cmdAsync(Directory.GetCurrentDirectory(),
+                $"wget -e \"https_proxy={proxy}\" --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
         }
         else
         {
-            await staticContext.cmdAsync(Directory.GetCurrentDirectory(), "wget --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
+            await staticContext.cmdAsync(Directory.GetCurrentDirectory(),
+                "wget --no-cache -qO- https://raw.githubusercontent.com/Cangjier/type-sharp/main/install.sh | bash");
         }
     }
 });
-argsRouter.Register(["init"], async () =>
-{
-    await argsRouter.Route(["run", "init"]);
-});
+argsRouter.Register(["init"], async () => { await argsRouter.Route(["run", "init"]); });
 argsRouter.Register(["api"], ApiCommands.Run);
 argsRouter.Register(["package"], async (
     [ArgsIndex] string path,
     [ArgsAliases("-o", "--output")] string? output = null
-    ) =>
+) =>
 {
     // 对脚本进行打包成可执行文件
     // ----F974135D-D9A0-43E5-BEAD-4DA7FBD4DF34----
@@ -201,7 +204,8 @@ argsRouter.Register(["package"], async (
     else if (File.Exists(path))
     {
         flag = PackageFlag.File;
-        outputProgramPath = Path.Combine(Path.GetDirectoryName(path) ?? "", Path.GetFileNameWithoutExtension(path) + ".exe");
+        outputProgramPath = Path.Combine(Path.GetDirectoryName(path) ?? "",
+            Path.GetFileNameWithoutExtension(path) + ".exe");
         var tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempDirectory);
         var tempFilePath = Path.Combine(tempDirectory, "index.ts");
@@ -214,6 +218,7 @@ argsRouter.Register(["package"], async (
         flag = PackageFlag.Directory;
         outputProgramPath = Path.Combine(Path.GetDirectoryName(path) ?? "", Path.GetFileName(path) + ".exe");
     }
+
     // 将path下所有文件进行打包成zip流的bytes
     byte[] contentBytes;
     if (flag == PackageFlag.File || flag == PackageFlag.Directory)
@@ -233,6 +238,7 @@ argsRouter.Register(["package"], async (
                     await fileStream.CopyToAsync(entryStream);
                 }
             }
+
             contentBytes = memoryStream.ToArray();
         }
     }
@@ -240,12 +246,14 @@ argsRouter.Register(["package"], async (
     {
         contentBytes = CLIUtil.UTF8.GetBytes(path);
     }
+
     byte[] md5Bytes;
     // 使用 MD5 计算哈希值
     using (MD5 md5 = MD5.Create())
     {
         md5Bytes = md5.ComputeHash(contentBytes);
     }
+
     // 将zipBytes进行base64编码
     var programBytes = File.ReadAllBytes(Environment.ProcessPath ?? throw new NullReferenceException());
     // 将base64String写入到程序的末尾
@@ -266,7 +274,7 @@ argsRouter.Register(["package"], async (
 
 argsRouter.Register(["text"], async (
     [ArgsIndex] string scriptPath
-    ) =>
+) =>
 {
     await Task.CompletedTask;
     var interfaces = typescript.getAllInterfaces(File.ReadAllText(scriptPath, Encoding.UTF8));
@@ -274,10 +282,7 @@ argsRouter.Register(["text"], async (
 });
 
 Logger.Info($"tscl {Assembly.GetExecutingAssembly().GetName().Version}");
-Console.CancelKeyPress += (sender, e) =>
-{
-    Environment.Exit(0);
-};
+Console.CancelKeyPress += (sender, e) => { Environment.Exit(0); };
 
 
 async Task<bool> routePackage()
@@ -298,6 +303,7 @@ async Task<bool> routePackage()
         {
             return false;
         }
+
         // 读取标识符
         int offset = -splitBytes.Length - sizeof(int);
         processStream.Seek(offset, SeekOrigin.End);
@@ -392,6 +398,7 @@ async Task<bool> routePackage()
                         await axios.download(url, Path.Combine(tempDirectory, "index.ts"));
                     }
                 }
+
                 File.Create(Path.Combine(tempDirectory, ".lock")).Close();
             }
             else
@@ -399,6 +406,7 @@ async Task<bool> routePackage()
                 Console.WriteLine("Package is invalid");
             }
         }
+
         string[] mainFileNames = ["main.ts", "index.ts"];
         foreach (var mainFileName in mainFileNames)
         {
@@ -408,11 +416,11 @@ async Task<bool> routePackage()
                 break;
             }
         }
+
         if (mainPath == string.Empty)
         {
             Console.WriteLine("Package main.ts or index.ts not found");
         }
-
     }
 
     if (File.Exists(mainPath))
@@ -423,6 +431,7 @@ async Task<bool> routePackage()
     {
         help();
     }
+
     return true;
 }
 
@@ -432,8 +441,16 @@ if (await routePackage())
 }
 else
 {
-    await argsRouter.Route(args);
+    if (args.Length > 0)
+    {
+        await argsRouter.Route(args);
+    }
+    else
+    {
+        help();
+    }
 }
+
 Logger.Info("Waiting for logger to be empty");
 await Logger.LoggerFile.QueueLogger.WaitForEmpty(TimeSpan.FromSeconds(1));
 Logger.Info("Logger is empty");

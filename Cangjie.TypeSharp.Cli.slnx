@@ -3,4 +3,5 @@
   <Project Path="../cangjie/Cangjie.csproj" />
   <Project Path="../tidy-hpc/TidyHPC.csproj" />
   <Project Path="Cangjie.TypeSharp.Cli.csproj" />
+  <Project Path="../tidy-hpc-asp/TidyHPC.ASP.csproj" />
 </Solution>

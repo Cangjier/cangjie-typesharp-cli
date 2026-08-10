@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../tidy-hpc"
+		},
+		{
+			"path": "../tidy-hpc-asp"
 		}
 	],
 	"settings": {}
