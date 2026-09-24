@@ -29,8 +29,8 @@ let main = async () => {
     File.WriteAllText("token.txt", token);
 
     // 先编译
-    let cmdLinuxX64 = "dotnet publish -p:PublishProfile=linux-x64 -f:net10.0 --no-cache";
-    let cmdWinX64 = "dotnet publish -p:PublishProfile=win-x64 -f:net10.0 --no-cache";
+    let cmdLinuxX64 = "dotnet publish Cangjie.TypeSharp.Cli.csproj -p:PublishProfile=linux-x64 -f:net10.0 --no-cache";
+    let cmdWinX64 = "dotnet publish Cangjie.TypeSharp.Cli.csproj -p:PublishProfile=win-x64 -f:net10.0 --no-cache -p:PublishSingleFile=true";
     let cmdResult = await cmdAsync(Environment.CurrentDirectory, cmdLinuxX64,{redirect:true});
     if (cmdResult.exitCode != 0) {
         console.log(`cmd: ${cmdLinuxX64}`);

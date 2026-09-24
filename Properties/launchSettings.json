@@ -2,7 +2,7 @@
   "profiles": {
     "Cangjie.TypeSharp.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "run C:\\Users\\Admin\\Documents\\GitHub\\ai-worker\\end\\index.ts \"整理成使用报告\" C:\\Users\\Admin\\Documents\\GitHub\\ai-worker\\end"
+      "commandLineArgs": "run C:\\Users\\Admin\\Documents\\GitHub\\ai-worker\\test.ts"
     },
     "Test": {
       "commandName": "Project",
